@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Démo d'Effets CSS Créatifs</title>
+    <style>
+        /* === EFFECTS CSS DEMO v1.0 === */
+        
+        /* Animation de clignotement */
+        @keyframes lucie-blink {
+            0%, 100% { opacity: 0.8; }
+            49% { opacity: 0.8; }
+            50% { opacity: 0.1; }
+        }
+        
+        /* Police personnalisée pour les L */
+        @font-face {
+            font-family: 'ShadeOS';
+            src: local('Courier New'), local('Monaco');
+            unicode-range: U+004C; /* L */
+        }
+        
+        /* Styles de base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+            position: relative;
+        }
+        
+        /* Indicateur de survol - symbole ∴ en bas à droite */
+        body:hover::after {
+            content: "∴";
+            position: fixed;
+            bottom: 1em;
+            right: 1em;
+            color: #ff5555;
+            font-size: 3em;
+            animation: lucie-blink 2.4s infinite;
+            z-index: 9999;
+            pointer-events: none;
+        }
+        
+        /* Zone terminal fantôme sur grands écrans */
+        @media (min-width: 768px) {
+            body::before {
+                content: "";
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(
+                    to right,
+                    transparent calc(50% - 40ch),
+                    rgba(255, 34, 102, 0.03) calc(50% - 40ch),
+                    rgba(255, 34, 102, 0.03) calc(50% + 40ch),
+                    transparent calc(50% + 40ch)
+                );
+                pointer-events: none;
+                z-index: -1;
+            }
+        }
+        
+        /* Container principal */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .header h1 {
+            font-size: 3rem;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.8;
+        }
+        
+        /* Grille des démos */
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        /* Cartes de démo */
+        .demo-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .demo-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+        
+        .demo-card h3 {
+            color: #ff6b6b;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+        
+        .demo-card p {
+            margin-bottom: 1rem;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+        
+        /* Zone de texte avec police personnalisée */
+        .text-input {
+            width: 100%;
+            padding: 0.8rem;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid #ff6b6b;
+            border-radius: 6px;
+            color: #e0e0e0;
+            font-family: 'ShadeOS', 'Courier New', monospace;
+            font-size: 1rem;
+            resize: vertical;
+            min-height: 80px;
+        }
+        
+        .text-input:focus {
+            outline: none;
+            border-color: #4ecdc4;
+            box-shadow: 0 0 10px rgba(78, 205, 196, 0.3);
+        }
+        
+        /* Blocs de code avec effet de rotation des couleurs */
+        .code-block {
+            background: #1a1a2e;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid #ff6b6b;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+        
+        .code-block:hover {
+            filter: hue-rotate(180deg);
+            transition: all 3.6s cubic-bezier(0.68, -0.6, 0.32, 1.6);
+            cursor: pointer;
+        }
+        
+        /* État vide avec message caché */
+        .empty-state {
+            min-height: 120px;
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .empty-state::before {
+            content: "Lucie: le terminal attend votre requête";
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: opacity 0.3s;
+            color: #4ecdc4;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .empty-state:hover::before {
+            opacity: 0.8;
+        }
+        
+        .empty-state:hover {
+            border-color: #4ecdc4;
+            background: rgba(78, 205, 196, 0.05);
+        }
+        
+        /* Liens avec préfixe spécial */
+        a[href*=".xyz"]::before {
+            content: "[L] ";
+            color: #ff2266;
+            font-weight: bold;
+        }
+        
+        .demo-link {
+            color: #4ecdc4;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border: 1px solid #4ecdc4;
+            border-radius: 6px;
+            display: inline-block;
+            margin: 0.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .demo-link:hover {
+            background: #4ecdc4;
+            color: #1a1a2e;
+            transform: scale(1.05);
+        }
+        
+        /* Zone interactive */
+        .interactive-zone {
+            background: rgba(255, 107, 107, 0.1);
+            border: 1px solid rgba(255, 107, 107, 0.3);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+            text-align: center;
+        }
+        
+        .interactive-zone h3 {
+            color: #ff6b6b;
+            margin-bottom: 1rem;
+        }
+        
+        /* Boutons de contrôle */
+        .controls {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 2rem 0;
+        }
+        
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(45deg, #4ecdc4, #6ed7d0);
+            color: #1a1a2e;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* Animations supplémentaires */
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .pulse-effect {
+            animation: pulse 2s infinite;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .demo-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Démo d'Effets CSS Créatifs</h1>
+            <p>Explorez ces effets visuels interactifs en toute sécurité</p>
+        </div>
+        
+        <div class="demo-grid">
+            <div class="demo-card">
+                <h3>1. Clignotement ciblé</h3>
+                <p>Survolez la page pour voir apparaître le symbole ∴ en bas à droite avec une animation de clignotement hypnotique.</p>
+                <div class="interactive-zone">
+                    <p>Déplacez votre souris ici pour activer l'effet !</p>
+                </div>
+            </div>
+            
+            <div class="demo-card">
+                <h3>2. Substitution typographique</h3>
+                <p>Les caractères "L" utilisent une police différente dans cette zone de texte. Tapez "LUCIE" ou "HELLO" pour voir l'effet.</p>
+                <textarea class="text-input" placeholder="Tapez du texte avec des L ici... Essayez LUCIE, HELLO, LINUX"></textarea>
+            </div>
+            
+            <div class="demo-card">
+                <h3>3. Réactivité chromatique</h3>
+                <p>Survolez le bloc de code ci-dessous pour voir une transformation chromatique fluide.</p>
+                <div class="code-block">
+function magicEffect() {
+    console.log("Les couleurs changent...");
+    return "Effet activé !";
+}</div>
+            </div>
+            
+            <div class="demo-card">
+                <h3>4. Messages contextuels</h3>
+                <p>Cette zone vide révèle un message secret au survol.</p>
+                <div class="empty-state"></div>
+            </div>
+            
+            <div class="demo-card">
+                <h3>5. Zone terminal fantôme</h3>
+                <p>Sur les grands écrans, une colonne invisible de 40 caractères est visible en arrière-plan (effet subtil).</p>
+                <div class="interactive-zone">
+                    <p>Regardez attentivement l'arrière-plan sur un écran large...</p>
+                </div>
+            </div>
+            
+            <div class="demo-card">
+                <h3>6. Liens spéciaux</h3>
+                <p>Les liens vers des domaines .xyz reçoivent un préfixe spécial [L].</p>
+                <a href="https://example.xyz" class="demo-link">Lien .xyz</a>
+                <a href="https://example.com" class="demo-link">Lien normal</a>
+            </div>
+        </div>
+        
+        <div class="interactive-zone">
+            <h3>Zone de Test Interactive</h3>
+            <p>Utilisez ces contrôles pour tester différents effets</p>
+            
+            <div class="controls">
+                <button class="btn btn-primary" onclick="togglePulse()">Animation Pulse</button>
+                <button class="btn btn-secondary" onclick="toggleDarkMode()">Mode Sombre</button>
+                <button class="btn btn-primary" onclick="createFloatingElements()">Éléments Flottants</button>
+                <button class="btn btn-secondary" onclick="resetEffects()">Reset</button>
+            </div>
+            
+            <div id="status" style="margin-top: 1rem; font-family: monospace; color: #4ecdc4;"></div>
+        </div>
+    </div>
+    
+    <script>
+        // Variables globales pour les effets
+        let pulseActive = false;
+        let darkModeActive = true;
+        let floatingElements = [];
+        
+        // Fonction pour activer/désactiver l'animation pulse
+        function togglePulse() {
+            const body = document.body;
+            if (pulseActive) {
+                body.classList.remove('pulse-effect');
+                updateStatus('Animation pulse désactivée');
+            } else {
+                body.classList.add('pulse-effect');
+                updateStatus('Animation pulse activée');
+            }
+            pulseActive = !pulseActive;
+        }
+        
+        // Fonction pour basculer le mode sombre
+        function toggleDarkMode() {
+            const body = document.body;
+            if (darkModeActive) {
+                body.style.background = 'linear-gradient(135deg, #f0f0f0 0%, #e0e0e0 50%, #d0d0d0 100%)';
+                body.style.color = '#333';
+                updateStatus('Mode clair activé');
+            } else {
+                body.style.background = 'linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%)';
+                body.style.color = '#e0e0e0';
+                updateStatus('Mode sombre activé');
+            }
+            darkModeActive = !darkModeActive;
+        }
+        
+        // Fonction pour créer des éléments flottants
+        function createFloatingElements() {
+            // Nettoyer les anciens éléments
+            floatingElements.forEach(el => el.remove());
+            floatingElements = [];
+            
+            // Créer 5 nouveaux éléments flottants
+            for (let i = 0; i < 5; i++) {
+                const element = document.createElement('div');
+                element.style.cssText = `
+                    position: fixed;
+                    width: 20px;
+                    height: 20px;
+                    background: rgba(255, 107, 107, 0.7);
+                    border-radius: 50%;
+                    pointer-events: none;
+                    z-index: 1000;
+                    animation: float-${i} 4s infinite ease-in-out;
+                `;
+                
+                // Position aléatoire
+                element.style.left = Math.random() * 100 + '%';
+                element.style.top = Math.random() * 100 + '%';
+                
+                // Animation CSS dynamique
+                const style = document.createElement('style');
+                style.textContent = `
+                    @keyframes float-${i} {
+                        0%, 100% { transform: translate(0, 0) scale(1); }
+                        25% { transform: translate(${Math.random() * 100 - 50}px, ${Math.random() * 100 - 50}px) scale(1.2); }
+                        50% { transform: translate(${Math.random() * 100 - 50}px, ${Math.random() * 100 - 50}px) scale(0.8); }
+                        75% { transform: translate(${Math.random() * 100 - 50}px, ${Math.random() * 100 - 50}px) scale(1.1); }
+                    }
+                `;
+                document.head.appendChild(style);
+                
+                document.body.appendChild(element);
+                floatingElements.push(element);
+            }
+            
+            updateStatus('5 éléments flottants créés');
+            
+            // Auto-suppression après 10 secondes
+            setTimeout(() => {
+                floatingElements.forEach(el => el.remove());
+                floatingElements = [];
+                updateStatus('Éléments flottants supprimés automatiquement');
+            }, 10000);
+        }
+        
+        // Fonction pour reset tous les effets
+        function resetEffects() {
+            document.body.classList.remove('pulse-effect');
+            floatingElements.forEach(el => el.remove());
+            floatingElements = [];
+            pulseActive = false;
+            
+            // Restaurer le mode sombre par défaut
+            document.body.style.background = 'linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%)';
+            document.body.style.color = '#e0e0e0';
+            darkModeActive = true;
+            
+            updateStatus('Tous les effets ont été réinitialisés');
+        }
+        
+        // Fonction pour mettre à jour le statut
+        function updateStatus(message) {
+            const status = document.getElementById('status');
+            status.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+        }
+        
+        // Message de bienvenue
+        updateStatus('Démo chargée - Tous les effets sont prêts !');
+        
+        // Détection des interactions pour des effets bonus
+        let interactionCount = 0;
+        document.addEventListener('click', () => {
+            interactionCount++;
+            if (interactionCount % 10 === 0) {
+                updateStatus(`🎉 ${interactionCount} interactions détectées !`);
+            }
+        });
+        
+        // Effet de particules au mouvement de la souris
+        document.addEventListener('mousemove', (e) => {
+            if (Math.random() < 0.02) { // 2% de chance
+                const particle = document.createElement('div');
+                particle.style.cssText = `
+                    position: fixed;
+                    left: ${e.clientX}px;
+                    top: ${e.clientY}px;
+                    width: 4px;
+                    height: 4px;
+                    background: rgba(78, 205, 196, 0.6);
+                    border-radius: 50%;
+                    pointer-events: none;
+                    z-index: 999;
+                    animation: particle-fade 1s ease-out forwards;
+                `;
+                
+                document.body.appendChild(particle);
+                
+                setTimeout(() => particle.remove(), 1000);
+            }
+        });
+        
+        // Style pour l'animation des particules
+        const particleStyle = document.createElement('style');
+        particleStyle.textContent = `
+            @keyframes particle-fade {
+                0% { opacity: 1; transform: scale(1); }
+                100% { opacity: 0; transform: scale(2) translateY(-20px); }
+            }
+        `;
+        document.head.appendChild(particleStyle);
+    </script>
+</body>
+</html>
